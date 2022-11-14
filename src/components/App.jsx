@@ -15,13 +15,22 @@ export class App extends Component {
     filter: '',
   };
 
-  handleFormSubmit = newContact => {
-    // const newContact = {
-    //   id: contact.id,
-    //   name: contact.name,
-    //   number: contact.number,
-    // };
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parseContacts = JSON.parse(contacts);
 
+    if (parseContacts) {
+      this.setState({ contacts: parseContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+  handleFormSubmit = newContact => {
     const ContactValue = newContact.name.toLowerCase();
     const duplicateСontact = this.state.contacts.find(
       contact => contact.name.toLowerCase() === ContactValue
